@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafMac OS</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to override Tailwind and define the macOS aesthetic */
+        
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+         :root {
+            --window-bg: rgba(0, 255, 136, 0.9);
+            --window-shadow: 0 10px 30px rgba(0, 255, 191, 0.131);
+            --dock-bg: rgba(0, 0, 0, 0.2);
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #201f1f;
+            /* Fallback */
+            /* Default background can be uploaded by user */
+            background-image: url('./background.png');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            transition: background-image 0.5s ease;
+        }
+        /* Styling for the application windows */
+        
+        .window {
+            position: absolute;
+            top: 10vh;
+            left: 20vw;
+            width: clamp(300px, 70vw, 900px);
+            height: clamp(200px, 60vh, 700px);
+            background: var(--window-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 12px;
+            box-shadow: var(--window-shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 100;
+            transition: all 0.2s ease-out;
+            /* Allow resizing but handle it in JS for max/min */
+            min-width: 280px;
+            min-height: 150px;
+        }
+        
+        .window-header {
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            flex-shrink: 0;
+            user-select: none;
+            gap: 8px;
+        }
+        /* Window controls (Close, Minimize, Maximize) */
+        
+        .window-controls>div {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            /* Already circular, addressing the request for 50% radius on taskbar buttons (window controls) */
+            display: inline-block;
+            margin-right: 6px;
+            cursor: pointer !important;
+            /* Forces normal cursor on buttons */
+        }
+        
+        .close-btn {
+            background-color: #ff5f56;
+        }
+        
+        .minimize-btn {
+            background-color: #ffbd2e;
+        }
+        
+        .maximize-btn {
+            background-color: #27c93f;
+        }
+        
+        .window-content {
+            flex-grow: 1;
+            padding: 0;
+            overflow: hidden;
+            /* Important for iframe/paint app */
+        }
+        /* Dock Styling */
+        
+        #dock {
+            position: fixed;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dock-bg);
+            backdrop-filter: blur(30px);
+            border-radius: 50px;
+            padding: 8px 12px;
+            display: flex;
+            gap: 12px;
+            box-shadow: var(--window-shadow);
+            z-index: 200;
+            transition: background-image 0.5s ease;
+        }
+        
+        .dock-icon {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Removed font size as we are now using images */
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.2, 0.0, 0.0, 1.4);
+            border-radius: 50px;
+            /* Container radius */
+            box-shadow: 0 4px 10px rgb(2, 253, 186);
+            position: relative;
+            overflow: hidden;
+            /* Ensure image fits neatly inside */
+        }
+        
+        .dock-icon:hover {
+            transform: translateY(-8px) scale(1.1);
+        }
+        /* App icon images inside the dock container */
+        
+        .dock-icon img {
+            border-radius: 12px;
+            /* High radius on the image itself for the app icon look */
+        }
+        /* Indicator dot for open apps */
+        
+        .dock-icon.open::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #007aff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Menu Bar -->
+    <div class="fixed top-0 left-0 right-0 h-8 bg-gray-800 bg-opacity-30 backdrop-blur-md text-white flex items-center justify-between px-4 z-1000">
+        <div class="font-bold text-sm"> SafMac</div>
+        <div class="flex items-center text-xs space-x-3">
+            <!-- Background Uploaders -->
+            <span onclick="document.getElementById('bgUploader').click()" title="Change Desktop Wallpaper" class="cursor-pointer hover:text-blue-300">🖼️</span>
+            <span onclick="document.getElementById('dockBgUploader').click()" title="Change Dock Background" class="cursor-pointer hover:text-blue-300">🎨</span>
+
+            <span>Apps:</span>
+            <span>Edudesk, word-to-excel, Paint</span>
+            <span>🛜</span>
+        </div>
+    </div>
+
+    <!-- Hidden File Uploaders -->
+    <input type="file" id="bgUploader" accept="image/*" class="hidden" onchange="uploadDesktopBackground(event)">
+    <input type="file" id="dockBgUploader" accept="image/*" class="hidden" onchange="uploadDockBackground(event)">
+
+    <!-- Settings Icon on Desktop (Addressing request to add settings on home page) -->
+    <div id="desktop-settings" class="absolute top-12 left-4 w-16 h-16 flex flex-col items-center p-1 rounded-lg cursor-pointer hover:bg-white/20 transition z-50" onclick="launchApp('Settings')">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.22a2 2 0 0 1-1.4 1.84l-.62.33a2 2 0 0 0-1.7 3.2l.14.16a2 2 0 0 1-.58 1.48v.44a2 2 0 0 1 .58 1.48l-.14.16a2 2 0 0 0 1.7 3.2l.62.33a2 2 0 0 1 1.4 1.84V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.22a2 2 0 0 1 1.4-1.84l.62-.33a2 2 0 0 0 1.7-3.2l-.14-.16a2 2 0 0 1 .58-1.48v-.44a2 2 0 0 1-.58-1.48l.14-.16a2 2 0 0 0-1.7-3.2l-.62-.33a2 2 0 0 1-1.4-1.84V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
+        </svg>
+        <span class="text-white text-xs mt-1 drop-shadow-md">Settings</span>
+    </div>
+
+
+    <!-- The Dock -->
+    <div id="dock">
+        <!-- Dock icons now use placeholder images -->
+
+        <!-- EduDesk (External) -->
+        <div class="dock-icon" title="EduDesk" onclick="launchApp('EduDesk')">
+            <img src="./EduDesk-The-solution-of-answers-10-08-2025_07_03_PM.png" alt="EduDesk Icon" class="w-full h-full object-cover rounded-xl shadow-md">
+        </div>
+        <!-- Word to Excel (External) -->
+        <div class="dock-icon" title="Word to Excel" onclick="launchApp('WordToExcel')">
+            <img src="./Gemini_Generated_Image_bqtyglbqtyglbqty.png" alt="W2E Icon" class="w-full h-full object-cover rounded-xl shadow-md">
+        </div>
+        <!-- Paint App (Internal) -->
+        <div class="dock-icon" title="SafPaint" onclick="launchApp('PaintApp')">
+            <img src="./clipping.png" alt="Paint Icon" class="w-full h-full object-cover rounded-xl shadow-md">
+        </div>
+
+        <div class="dock-icon" title="Settings" onclick="launchApp('Settings')">
+            <span>⚙️</span>
+        </div>
+    </div>
+
+    <!-- Window Container (All dynamic windows will be added here) -->
+    <div id="window-container"></div>
+
+
+    <script>
+        // --- Global State and Utility Functions ---
+        const windowContainer = document.getElementById('window-container');
+        const dock = document.getElementById('dock');
+        let windows = []; // Array to track active windows: { id, appName, isMaximized, element }
+        let Z_INDEX_COUNTER = 100;
+
+        // --- Application Definitions ---
+
+        const APP_DEFINITIONS = {
+            'EduDesk': {
+                title: 'EduDesk - SafMac',
+                icon: '📝',
+                url: 'https://saffar731.github.io/edudes/edudexk.html',
+                // Use a function to dynamically generate content with the iframe URL
+                contentHTML: ({
+                    url
+                }) => `
+                <div class="w-full h-full p-0">
+                    <iframe src="${url}" class="w-full h-full border-0 rounded-b-lg" frameborder="0"></iframe>
+                </div>
+            `
+            },
+            'WordToExcel': {
+                title: 'Word to Excel - SafMac',
+                icon: '📊',
+                url: 'https://saffar731.github.io/word-to-excel/wtoe.html',
+                contentHTML: ({
+                    url
+                }) => `
+                <div class="w-full h-full p-0">
+                    <iframe src="${url}" class="w-full h-full border-0 rounded-b-lg" frameborder="0"></iframe>
+                </div>
+            `
+            },
+            'PaintApp': {
+                title: 'SafPaint',
+                icon: '🖌️',
+                contentHTML: `
+                <div class="h-full flex flex-col p-2 bg-white/80 backdrop-blur-sm">
+                    <div class="flex space-x-4 mb-2 items-center bg-gray-100 p-2 rounded-lg shadow-sm">
+                        <label class="text-xs font-medium text-gray-700">Color:</label>
+                        <input type="color" id="paintColor" value="#007aff" title="Brush Color" class="w-8 h-8 rounded border-none cursor-pointer">
+                        
+                        <label class="text-xs font-medium text-gray-700">Thickness:</label>
+                        <input type="range" id="paintThickness" min="1" max="50" value="5" title="Brush Thickness" class="flex-grow cursor-pointer">
+                        
+                        <button onclick="clearPaintCanvas(this)" class="px-3 py-1 bg-red-500 text-white text-xs rounded-lg hover:bg-red-600 transition shadow-md">
+                            Clear
+                        </button>
+                    </div>
+                    <div class="flex-grow min-h-0 border-2 border-gray-300 rounded overflow-hidden bg-white shadow-inner">
+                        <canvas id="paintCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+                    </div>
+                </div>
+            `,
+                onLaunch: (windowId) => {
+                    // Initialize the drawing logic
+                    initPaintApp(windowId);
+                }
+            },
+            'Settings': {
+                title: 'System Settings',
+                icon: '⚙️',
+                contentHTML: `
+                <div class="p-6 h-full overflow-y-auto">
+                    <h2 class="text-xl font-bold mb-4 border-b pb-2 text-gray-800">Appearance Settings</h2>
+                    <p class="text-gray-600 mb-6">Use the controls below or the icons in the top bar to change your desktop's appearance.</p>
+
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm mb-4 border border-gray-200">
+                        <h3 class="font-semibold mb-2 text-gray-700">Desktop Wallpaper (🖼️)</h3>
+                        <p class="text-sm text-gray-500 mb-3">Upload a new image to replace the main background wallpaper.</p>
+                        <button onclick="document.getElementById('bgUploader').click()" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition shadow-md">
+                            Upload Wallpaper
+                        </button>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm border border-gray-200">
+                        <h3 class="font-semibold mb-2 text-gray-700">Dock Background (🎨)</h3>
+                        <p class="text-sm text-gray-500 mb-3">Upload a new image for the taskbar (dock) background.</p>
+                        <button onclick="document.getElementById('dockBgUploader').click()" class="bg-green-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-green-600 transition shadow-md">
+                            Upload Dock Background
+                        </button>
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-gray-300">
+                        <h2 class="text-xl font-bold mb-2 text-gray-800">About SafMac</h2>
+                        <p class="text-gray-700 text-sm">Version 1.1.0 (Built by Safwat Rakhwan(Safar Tools))</p>
+                    </div>
+                </div>
+            `
+            }
+        };
+
+        // --- Image Uploader Functions ---
+
+        function uploadDesktopBackground(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.body.style.backgroundImage = `url('${e.target.result}')`;
+                    document.body.style.backgroundSize = 'cover';
+                    document.body.style.backgroundPosition = 'center';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        window.uploadDesktopBackground = uploadDesktopBackground; // Expose globally
+
+        function uploadDockBackground(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const dockElement = document.getElementById('dock');
+                    dockElement.style.backgroundImage = `url('${e.target.result}')`;
+                    dockElement.style.backgroundSize = 'cover';
+                    dockElement.style.backgroundPosition = 'center';
+                    dockElement.style.backgroundColor = 'transparent'; // Ensure transparency
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+        window.uploadDockBackground = uploadDockBackground; // Expose globally
+
+        // --- Paint App Functions ---
+
+        function initPaintApp(windowId) {
+            const windowElement = document.getElementById(windowId);
+            const canvas = windowElement.querySelector('#paintCanvas');
+            const colorInput = windowElement.querySelector('#paintColor');
+            const thicknessInput = windowElement.querySelector('#paintThickness');
+            const ctx = canvas.getContext('2d');
+
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            // Function to set canvas size to fill its container
+            function resizeCanvas() {
+                // Get size of the immediate parent container of the canvas
+                const parent = canvas.parentElement;
+                if (parent.clientWidth > 0 && parent.clientHeight > 0) {
+                    canvas.width = parent.clientWidth;
+                    canvas.height = parent.clientHeight;
+
+                    // Set initial drawing styles
+                    ctx.strokeStyle = colorInput.value;
+                    ctx.lineWidth = thicknessInput.value;
+                    ctx.lineCap = 'round';
+                    ctx.lineJoin = 'round';
+                }
+            }
+
+            // Delay necessary to ensure the window (and thus canvas container) is fully rendered and sized
+            setTimeout(resizeCanvas, 100);
+
+            // Monitor container size changes (e.g., when the user resizes the window)
+            const resizeObserver = new ResizeObserver(resizeCanvas);
+            // Observe the container div, not the canvas itself
+            resizeObserver.observe(canvas.parentElement);
+
+
+            // Drawing logic
+            function draw(e) {
+                if (!isDrawing) return;
+
+                // Determine touch or mouse position
+                let clientX, clientY;
+                if (e.touches && e.touches.length) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+                if (clientX == null || clientY == null) return;
+
+                const rect = canvas.getBoundingClientRect();
+                const currentX = clientX - rect.left;
+                const currentY = clientY - rect.top;
+
+                ctx.strokeStyle = colorInput.value;
+                ctx.lineWidth = thicknessInput.value;
+
+                ctx.beginPath();
+                ctx.moveTo(lastX, lastY);
+                ctx.lineTo(currentX, currentY);
+                ctx.stroke();
+
+                lastX = currentX;
+                lastY = currentY;
+            }
+
+            // Event listeners (Mouse)
+            canvas.addEventListener('mousedown', (e) => {
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                lastX = e.clientX - rect.left;
+                lastY = e.clientY - rect.top;
+            });
+
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', () => isDrawing = false);
+            canvas.addEventListener('mouseleave', () => isDrawing = false);
+
+            // Event listeners (Touch)
+            canvas.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                isDrawing = true;
+                const rect = canvas.getBoundingClientRect();
+                lastX = e.touches[0].clientX - rect.left;
+                lastY = e.touches[0].clientY - rect.top;
+            }, {
+                passive: false
+            });
+
+            canvas.addEventListener('touchmove', (e) => {
+                e.preventDefault();
+                draw(e);
+            }, {
+                passive: false
+            });
+
+            canvas.addEventListener('touchend', () => isDrawing = false);
+
+            // Clean up the observer when the window is closed
+            window.addEventListener('beforeunload', () => resizeObserver.unobserve(canvas.parentElement));
+        }
+
+        // Global clear function accessible from the Paint App's clear button
+        window.clearPaintCanvas = (buttonElement) => {
+            const targetWindow = buttonElement.closest('.window');
+            const targetCanvas = targetWindow.querySelector('#paintCanvas');
+            if (targetCanvas) {
+                // Must resize again before clearing to ensure context size is correct
+                const ctx = targetCanvas.getContext('2d');
+                ctx.clearRect(0, 0, targetCanvas.width, targetCanvas.height);
+            }
+        };
+
+
+        // --- Window Management Functions ---
+
+        /**
+         * Finds the highest z-index and moves the clicked window to the top.
+         * @param {HTMLElement} windowElement
+         */
+        function focusWindow(windowElement) {
+            Z_INDEX_COUNTER++;
+            windowElement.style.zIndex = Z_INDEX_COUNTER;
+            // Update window state to mark it as active
+            windows.forEach(w => {
+                if (w.element === windowElement) {
+                    w.element.classList.add('ring-2', 'ring-blue-500', 'ring-opacity-50');
+                } else {
+                    w.element.classList.remove('ring-2', 'ring-blue-500', 'ring-opacity-50');
+                }
+            });
+        }
+
+        /**
+         * Creates and returns the HTML for the window control buttons (close, minimize, maximize).
+         * @param {string} windowId
+         */
+        function createControlsHTML(windowId) {
+            return `
+            <div class="window-controls flex items-center pl-2">
+                <div class="close-btn transition duration-100 hover:scale-110" onclick="closeWindow('${windowId}')" title="Close"></div>
+                <div class="minimize-btn transition duration-100 hover:scale-110" onclick="minimizeWindow('${windowId}')" title="Minimize"></div>
+                <div class="maximize-btn transition duration-100 hover:scale-110" onclick="maximizeWindow('${windowId}')" title="Maximize"></div>
+            </div>
+        `;
+        }
+
+        /**
+         * Launches or focuses an application window.
+         * @param {string} appName - The name of the application.
+         */
+        function launchApp(appName) {
+            const existingWindow = windows.find(w => w.appName === appName && !w.isMinimized);
+
+            // 1. If it exists, focus it and un-minimize if necessary
+            if (existingWindow) {
+                focusWindow(existingWindow.element);
+                if (existingWindow.isMinimized) {
+                    existingWindow.element.classList.remove('hidden');
+                    existingWindow.element.style.transform = '';
+                    existingWindow.isMinimized = false;
+                    updateDockIcon(appName, true);
+                }
+                return;
+            }
+
+            // 2. If it doesn't exist, create a new window
+            const windowId = 'win-' + Date.now();
+            const app = APP_DEFINITIONS[appName];
+            if (!app) {
+                console.error(`App ${appName} not defined.`);
+                return;
+            }
+
+            const windowElement = document.createElement('div');
+            windowElement.id = windowId;
+            windowElement.className = 'window';
+            windowElement.setAttribute('data-app-name', appName);
+
+            // Set initial position randomly for a nice cascade effect
+            const randomX = Math.random() * (window.innerWidth / 4);
+            const randomY = Math.random() * (window.innerHeight / 4);
+            windowElement.style.top = `${randomY}px`;
+            windowElement.style.left = `${randomX}px`;
+
+            // Handle content generation (function for iframe apps, string for internal apps)
+            const contentHTML = typeof app.contentHTML === 'function' ? app.contentHTML(app) : app.contentHTML;
+
+            // Use a default icon for the window title bar if the app definition doesn't contain a specific icon.
+            const headerIcon = app.icon || '📦';
+
+            windowElement.innerHTML = `
+            <div class="window-header bg-gray-100/70">
+                ${createControlsHTML(windowId)}
+                <span class="flex-grow text-center text-sm font-medium text-gray-700">${headerIcon} ${app.title}</span>
+                <div style="width: 68px;"></div> <!-- Spacer for centering title -->
+            </div>
+            <div class="window-content flex-grow" style="overflow: hidden;">
+                ${contentHTML}
+            </div>
+        `;
+
+            windowContainer.appendChild(windowElement);
+
+            const newWindow = {
+                id: windowId,
+                appName: appName,
+                element: windowElement,
+                isMinimized: false,
+                isMaximized: false,
+                // Store original position/size for maximizing/minimizing
+                originalBounds: {
+                    top: windowElement.offsetTop,
+                    left: windowElement.offsetLeft,
+                    width: windowElement.offsetWidth,
+                    height: windowElement.offsetHeight
+                }
+            };
+            windows.push(newWindow);
+
+            // Focus the new window
+            focusWindow(windowElement);
+
+            // Add dragging and focusing logic
+            makeWindowDraggable(windowElement);
+
+            // Run post-launch setup (e.g., canvas setup)
+            if (app.onLaunch) {
+                app.onLaunch(windowId);
+            }
+
+            updateDockIcon(appName, true);
+        }
+
+        function closeWindow(windowId) {
+            const index = windows.findIndex(w => w.id === windowId);
+            if (index > -1) {
+                const windowToClose = windows[index];
+                windowToClose.element.classList.add('scale-0', 'opacity-0');
+                windowToClose.element.addEventListener('transitionend', () => {
+                    windowToClose.element.remove();
+                }, {
+                    once: true
+                });
+
+                windows.splice(index, 1);
+                updateDockIcon(windowToClose.appName, false);
+            }
+        }
+
+        function minimizeWindow(windowId) {
+            const windowState = windows.find(w => w.id === windowId);
+            if (windowState) {
+                windowState.isMinimized = true;
+                windowState.element.classList.add('hidden');
+                updateDockIcon(windowState.appName, true);
+            }
+        }
+
+        function maximizeWindow(windowId) {
+            const windowState = windows.find(w => w.id === windowId);
+            if (!windowState) return;
+
+            const el = windowState.element;
+
+            if (windowState.isMaximized) {
+                // Restore
+                el.style.top = `${windowState.originalBounds.top}px`;
+                el.style.left = `${windowState.originalBounds.left}px`;
+                el.style.width = `${windowState.originalBounds.width}px`;
+                el.style.height = `${windowState.originalBounds.height}px`;
+                el.style.borderRadius = '12px';
+                windowState.isMaximized = false;
+            } else {
+                // Store current bounds before maximizing
+                windowState.originalBounds = {
+                    top: el.offsetTop,
+                    left: el.offsetLeft,
+                    width: el.offsetWidth,
+                    height: el.offsetHeight
+                };
+
+                // Maximize (account for top bar and dock)
+                el.style.top = '32px'; /* Height of top bar */
+                el.style.left = '0px';
+                el.style.width = '100vw';
+                el.style.height = `calc(100vh - 32px - ${dock.offsetHeight + 10}px)`; /* Deduct top bar and dock space */
+                el.style.borderRadius = '0';
+                windowState.isMaximized = true;
+            }
+        }
+
+        /**
+         * Adds drag functionality to a window.
+         * @param {HTMLElement} windowElement
+         */
+        function makeWindowDraggable(windowElement) {
+            const header = windowElement.querySelector('.window-header');
+            let isDragging = false;
+            let startX, startY, initialX, initialY;
+
+            header.addEventListener('mousedown', (e) => {
+                // Only drag if not clicking a control button
+                if (e.target.closest('.window-controls')) return;
+
+                isDragging = true;
+                header.style.cursor = 'grabbing';
+                startX = e.clientX;
+                startY = e.clientY;
+                initialX = windowElement.offsetLeft;
+                initialY = windowElement.offsetTop;
+                focusWindow(windowElement);
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+
+                let newX = initialX + dx;
+                let newY = initialY + dy;
+
+                // Keep window within viewport (with a small margin)
+                newX = Math.max(0, Math.min(newX, window.innerWidth - windowElement.offsetWidth));
+                newY = Math.max(32, Math.min(newY, window.innerHeight - windowElement.offsetHeight - 5)); // Account for top bar (32px)
+
+                windowElement.style.left = `${newX}px`;
+                windowElement.style.top = `${newY}px`;
+            });
+
+            document.addEventListener('mouseup', () => {
+                if (isDragging) {
+                    isDragging = false;
+                    header.style.cursor = 'grab';
+                    const windowState = windows.find(w => w.element === windowElement);
+                    if (windowState) {
+                        windowState.originalBounds.top = windowElement.offsetTop;
+                        windowState.originalBounds.left = windowElement.offsetLeft;
+                    }
+                }
+            });
+
+            // Add focus on any window click
+            windowElement.addEventListener('mousedown', () => focusWindow(windowElement));
+        }
+
+        /**
+         * Updates the dock icon's 'open' indicator.
+         * @param {string} appName
+         * @param {boolean} isOpen
+         */
+        function updateDockIcon(appName, isOpen) {
+            // Since we are no longer using the APP_DEFINITIONS for dock icons, we find it by onclick attribute
+            const iconElement = dock.querySelector(`[onclick="launchApp('${appName}')"]`);
+            if (iconElement) {
+                const hasOpenWindow = windows.some(w => w.appName === appName && !w.isMinimized);
+                if (hasOpenWindow) {
+                    iconElement.classList.add('open');
+                } else {
+                    iconElement.classList.remove('open');
+                }
+            }
+        }
+
+
+        // --- Initial Setup ---
+        window.onload = () => {
+            // Run initial setup if needed.
+        }
+    </script>
+</body>
+
+</html>
