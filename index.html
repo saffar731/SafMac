@@ -172,12 +172,44 @@
     <input type="file" id="dockBgUploader" accept="image/*" class="hidden" onchange="uploadDockBackground(event)">
 
     <!-- Settings Icon on Desktop (Addressing request to add settings on home page) -->
-    <div id="desktop-settings" class="absolute top-12 left-4 w-16 h-16 flex flex-col items-center p-1 rounded-lg cursor-pointer hover:bg-white/20 transition z-50" onclick="launchApp('Settings')">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.22a2 2 0 0 1-1.4 1.84l-.62.33a2 2 0 0 0-1.7 3.2l.14.16a2 2 0 0 1-.58 1.48v.44a2 2 0 0 1 .58 1.48l-.14.16a2 2 0 0 0 1.7 3.2l.62.33a2 2 0 0 1 1.4 1.84V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.22a2 2 0 0 1 1.4-1.84l.62-.33a2 2 0 0 0 1.7-3.2l-.14-.16a2 2 0 0 1 .58-1.48v-.44a2 2 0 0 1-.58-1.48l.14-.16a2 2 0 0 0-1.7-3.2l-.62-.33a2 2 0 0 1-1.4-1.84V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
-        </svg>
-        <span class="text-white text-xs mt-1 drop-shadow-md">Settings</span>
+    <div id="desktop-icons" class="absolute top-12 left-4 flex flex-col space-y-3 z-50">
+
+        <div id="desktop-settings" class="w-20 h-20 flex flex-col items-center p-1 rounded-lg cursor-pointer hover:bg-white/20 transition" onclick="launchApp('Settings')">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white drop-shadow-lg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.22a2 2 0 0 1-1.4 1.84l-.62.33a2 2 0 0 0-1.7 3.2l.14.16a2 2 0 0 1-.58 1.48v.44a2 2 0 0 1 .58 1.48l-.14.16a2 2 0 0 0 1.7 3.2l.62.33a2 2 0 0 1 1.4 1.84V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.22a2 2 0 0 1 1.4-1.84l.62-.33a2 2 0 0 0 1.7-3.2l-.14-.16a2 2 0 0 1 .58-1.48v-.44a2 2 0 0 1-.58-1.48l.14-.16a2 2 0 0 0-1.7-3.2l-.62-.33a2 2 0 0 1-1.4-1.84V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>
+            </svg>
+            <span class="text-white text-xs mt-1 drop-shadow-md">Settings</span>
+        </div>
+
+        <div class="w-20 h-20 flex flex-col items-center p-1 rounded-lg cursor-pointer hover:bg-white/20 transition" onclick="launchApp('EduDesk')" title="EduDesk">
+            <img src="./EduDesk-The-solution-of-answers-10-08-2025_07_03_PM.png" alt="EduDesk Icon" class="w-10 h-10 object-cover rounded-xl drop-shadow-lg">
+            <span class="text-white text-xs mt-1 drop-shadow-md">EduDesk</span>
+        </div>
+        <div class="w-20 h-20 flex flex-col items-center p-1 rounded-lg cursor-pointer hover:bg-white/20 transition" onclick="launchApp('Notes')" title="SafNotes">
+            <span>📝</span>
+            <span class="text-white text-xs mt-1 drop-shadow-md">SafNotes</span>
+        </div>
+
+
+
+
+
+        <div class="w-20 h-20 flex flex-col items-center p-1 rounded-lg cursor-pointer hover:bg-white/20 transition" onclick="launchApp('Calculator')" title="Calculator">
+            <svg version="1.1" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" id="Calculator-Icon--Streamline-Emojitwo" height="40" width="40" class="drop-shadow-lg">
+                <desc>
+                    Calculator Icon Streamline Emoji: https://streamlinehq.com
+                </desc>
+                <title>Pocket Calculator</title>
+                <path d="M5.895 1c-0.25 0 -0.5 0.25 -0.5 0.5v29c0 0.25 0.25 0.5 0.5 0.5h20.215c0.25 0 0.5 -0.25 0.5 -0.5V1.5c0 -0.25 -0.25 -0.5 -0.5 -0.5z" fill="#d0d0d0" stroke-width="0.5"></path>
+                <path d="M7.325 6.15c-0.24605 0.008215 -0.4883 0.27335 -0.4883 0.5385v6.515c0 0.26915 0.25 0.5385 0.5 0.5385h17.33c0.25 0 0.5 -0.26915 0.5 -0.5385v-6.515c0 -0.26915 -0.25 -0.5385 -0.5 -0.5385h-17.33c-0.0039 0 -0.007815 -0.000131 -0.01172 0z" fill="#4fd1d9" stroke-width="0.5"></path>
+                <path d="M7.325 15.185c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.2448 0.2397 0.48895 0.4844 0.499h1.543c0.2447 -0.010095 0.4844 -0.25425 0.4844 -0.499V15.685c0 -0.25 -0.25 -0.5 -0.5 -0.5H7.325zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5V15.685c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5V15.685c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5V15.685c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.003906 0 -0.007815 -0.0001215 -0.01172 0zm0 3.954c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm-3.954 3.954c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm-3.954 3.954c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0z" fill="#898a90" stroke-width="0.5"></path>
+                <path d="M16.06 2.4425c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.2655c0 0.25 0.25 0.5 0.5 0.5h8.595c0.25 0 0.5 -0.25 0.5 -0.5V2.9425c0 -0.25 -0.25 -0.5 -0.5 -0.5h-8.605zm-8.735 16.695c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5235zm-7.91 3.954c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm-7.91 3.954c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0zm3.954 0c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5v-1.5115c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5115c-0.0039 0 -0.007815 -0.0001215 -0.01172 0z" fill="#3e4347" stroke-width="0.5"></path>
+                <path d="M23.14 15.185c-0.24605 0.00763 -0.4883 0.2539 -0.4883 0.5v1.5115c0 0.25 0.25 0.5 0.5 0.5h1.5115c0.25 0 0.5 -0.25 0.5 -0.5V15.685c0 -0.25 -0.25 -0.5 -0.5 -0.5h-1.5235z" fill="#ed4c5c" stroke-width="0.5"></path>
+            </svg>
+            <span class="text-white text-xs mt-1 drop-shadow-md">Calculator</span>
+        </div>
     </div>
+
 
 
     <!-- The Dock -->
@@ -192,14 +224,29 @@
         <div class="dock-icon" title="Word to Excel" onclick="launchApp('WordToExcel')">
             <img src="./Gemini_Generated_Image_bqtyglbqtyglbqty.png" alt="W2E Icon" class="w-full h-full object-cover rounded-xl shadow-md">
         </div>
+        <div class="dock-icon" title="Retaining Wall Calculator" onclick="launchApp('Retaining')">
+            <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" id="Desktop-Computer-Flat--Streamline-Fluent-Emoji" height="32" width="32">
+  <desc>
+    Desktop Computer Flat Streamline Emoji: https://streamlinehq.com
+  </desc>
+  <path d="M26.37 26H5.63c-0.35 0 -0.63 0.28 -0.63 0.63v2.74c0 0.35 0.28 0.63 0.63 0.63h20.74c0.35 0 0.63 -0.28 0.63 -0.63v-2.74c0 -0.35 -0.28 -0.63 -0.63 -0.63Z" fill="#9b9b9b" stroke-width="1"></path>
+  <path d="M8.17333 23H9v0.29c0 0.39 0.32069 0.71 0.71152 0.71H22.2785c0.4008 0 0.7215 -0.32 0.7215 -0.71V23h0.8267C24.48 23 25 22.61 25 22.12V17h-2v4H9v-4H7v5.12c0 0.49 0.52 0.88 1.17333 0.88ZM5.63 25h20.74c0.35 0 0.63 0.28 0.63 0.63v2.74c0 0.35 -0.28 0.63 -0.63 0.63H5.63c-0.35 0 -0.63 -0.28 -0.63 -0.63v-2.74c0 -0.35 0.28 -0.63 0.63 -0.63Z" fill="#bebebe" stroke-width="1"></path>
+  <path d="M29 19H3c-0.55 0 -1 -0.45 -1 -1V3c0 -0.55 0.45 -1 1 -1h26c0.55 0 1 0.45 1 1v15c0 0.55 -0.45 1 -1 1Z" fill="#7167a4" stroke-width="1"></path>
+  <path d="M3 17.75V3.25c0 -0.14 0.11 -0.25 0.25 -0.25h25.5c0.14 0 0.25 0.11 0.25 0.25v14.5c0 0.14 -0.11 0.25 -0.25 0.25H3.25c-0.14 0 -0.25 -0.11 -0.25 -0.25Z" fill="#26c9fc" stroke-width="1"></path>
+  <path d="M7 19h2v1H7v-1Zm-0.12 6.75h-0.76c-0.06 0 -0.12 0.06 -0.12 0.13v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0.01 -0.07 -0.05 -0.13 -0.11 -0.13Zm1.71998 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0.01 -0.06 -0.05 -0.12 -0.12 -0.12Zm0.98004 0H10.33c0.07 0 0.12 0.06 0.12 0.12v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-0.74998c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.06 0.05 -0.12 0.12 -0.12Zm2.47998 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0 -0.06 -0.05 -0.12 -0.12 -0.12Zm0.97 0h0.75c0.07 0 0.13 0.06 0.12 0.12v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-0.75c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.06 0.05 -0.12 0.12 -0.12Zm2.48 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0.01 -0.06 -0.05 -0.12 -0.12 -0.12Zm0.98 0h0.75c0.07 0 0.12 0.06 0.12 0.12v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-0.75c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.06 0.05 -0.12 0.12 -0.12Zm2.48 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0 -0.06 -0.06 -0.12 -0.12 -0.12Zm0.97 0h0.75c0.07 0 0.13 0.06 0.12 0.12v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-0.75c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.06 0.05 -0.12 0.12 -0.12Zm2.48 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0.01 -0.06 -0.05 -0.12 -0.12 -0.12Zm0.98 0h0.75c0.07 0 0.12 0.06 0.12 0.12v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-0.75c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.06 0.05 -0.12 0.12 -0.12Zm2.48 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0 -0.06 -0.06 -0.12 -0.12 -0.12Zm-19.76 1.5h0.76c0.06 0 0.12 0.06 0.11 0.13v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-0.75c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.07 0.06 -0.13 0.12 -0.13Zm2.47998 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0.01 -0.06 -0.05 -0.12 -0.12 -0.12Zm0.98004 0H10.33c0.07 0 0.12 0.06 0.12 0.12v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-0.74998c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.06 0.05 -0.12 0.12 -0.12Zm2.47998 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0 -0.06 -0.05 -0.12 -0.12 -0.12Zm0.98 0h5.9c0.07 0 0.12 0.06 0.12 0.12v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-5.9c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.06 0.05 -0.12 0.12 -0.12Zm7.65 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0.01 -0.06 -0.05 -0.12 -0.12 -0.12Zm0.98 0h0.75c0.07 0 0.13 0.06 0.12 0.12v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-0.75c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.06 0.05 -0.12 0.12 -0.12Zm2.48 0h-0.75c-0.07 0 -0.12 0.06 -0.12 0.12v0.75c0 0.07 0.06 0.12 0.12 0.12h0.75c0.07 0 0.12 -0.06 0.12 -0.12v-0.75c0 -0.06 -0.05 -0.12 -0.12 -0.12Zm0.98 0h0.75c0.06 0 0.12 0.06 0.12 0.12v0.75c0 0.06 -0.05 0.12 -0.12 0.12h-0.75c-0.06 0 -0.12 -0.05 -0.12 -0.12v-0.75c0 -0.06 0.05 -0.12 0.12 -0.12ZM25 19h-2v1h2v-1Z" fill="#9b9b9b" stroke-width="1"></path>
+</svg>
+        </div>
         <!-- Paint App (Internal) -->
         <div class="dock-icon" title="SafPaint" onclick="launchApp('PaintApp')">
             <img src="./clipping.png" alt="Paint Icon" class="w-full h-full object-cover rounded-xl shadow-md">
         </div>
 
+
         <div class="dock-icon" title="Settings" onclick="launchApp('Settings')">
             <span>⚙️</span>
         </div>
+
+
     </div>
 
     <!-- Window Container (All dynamic windows will be added here) -->
@@ -229,10 +276,47 @@
                 </div>
             `
             },
+            'Notes': {
+                title: 'SafNotes - SafMac',
+                icon: '📝',
+                url: './Notes app.html',
+                // Use a function to dynamically generate content with the iframe URL
+                contentHTML: ({
+                    url
+                }) => `
+                <div class="w-full h-full p-0">
+                    <iframe src="${url}" class="w-full h-full border-0 rounded-b-lg" frameborder="0"></iframe>
+                </div>
+            `
+            },
             'WordToExcel': {
                 title: 'Word to Excel - SafMac',
                 icon: '📊',
                 url: 'https://saffar731.github.io/word-to-excel/wtoe.html',
+                contentHTML: ({
+                    url
+                }) => `
+                <div class="w-full h-full p-0">
+                    <iframe src="${url}" class="w-full h-full border-0 rounded-b-lg" frameborder="0"></iframe>
+                </div>
+            `
+            },
+            'Retaining': {
+                title: 'Retaining Wall Calculator - SafMac',
+                icon: '📊',
+                url: 'https://saffar731.github.io/edudes/calculator.html',
+                contentHTML: ({
+                    url
+                }) => `
+                <div class="w-full h-full p-0">
+                    <iframe src="${url}" class="w-full h-full border-0 rounded-b-lg" frameborder="0"></iframe>
+                </div>
+            `
+            },
+            'Calculator': {
+                title: ' Calculator - SafMac ',
+                icon: '📊',
+                url: './Calculator.html',
                 contentHTML: ({
                     url
                 }) => `
