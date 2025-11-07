@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Calculator</title>
+
+    <!-- Import a clean, modern font (Inter) from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Base Styles & Resets --- */
+        
+         :root {
+            --bg-color: #1a1b26;
+            /* Dark background */
+            --calculator-bg: #2a2d3a;
+            /* Slightly lighter calculator body */
+            --display-bg: #1e2029;
+            /* Darker display screen */
+            --button-bg: #3b3e4e;
+            /* Standard button */
+            --button-hover: #4c5063;
+            /* Standard button hover */
+            --operator-bg: #007aff;
+            /* Blue for operators */
+            --operator-hover: #0056b3;
+            /* Darker blue on hover */
+            --action-bg: #ff6b6b;
+            /* Red/pink for clear */
+            --action-hover: #e05252;
+            /* Darker red on hover */
+            --text-color: #f0f0f5;
+            /* Light text */
+            --border-radius-lg: 1.5rem;
+            /* Large radius for container */
+            --border-radius-md: 1rem;
+            /* Medium radius for buttons/display */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* --- Calculator Container --- */
+        
+        .calculator-container {
+            width: 90%;
+            max-width: 380px;
+            /* Max width on desktop */
+            background-color: var(--calculator-bg);
+            border-radius: var(--border-radius-lg);
+            padding: 1.5rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 15px rgba(0, 122, 255, 0.1);
+            overflow: hidden;
+        }
+        /* --- Display Screen --- */
+        
+        .display {
+            width: 100%;
+            background-color: var(--display-bg);
+            border: none;
+            border-radius: var(--border-radius-md);
+            color: var(--text-color);
+            font-size: 3rem;
+            /* Large, readable font */
+            font-weight: 500;
+            text-align: right;
+            padding: 1.5rem 1rem;
+            margin-bottom: 1.5rem;
+            /* Prevent native browser styling */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            outline: none;
+        }
+        
+        .display::placeholder {
+            color: #6a6e80;
+        }
+        /* --- Button Grid --- */
+        
+        .buttons {
+            display: grid;
+            /* 4 columns of equal fraction */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            /* Space between buttons */
+        }
+        /* --- Base Button Style --- */
+        
+        .btn {
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-size: 1.5rem;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            padding: 1.25rem;
+            /* Large, tappable area */
+            cursor: pointer;
+            background-color: var(--button-bg);
+            color: var(--text-color);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            /* For better text rendering */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        /* --- Button States --- */
+        
+        .btn:hover {
+            background-color: var(--button-hover);
+        }
+        
+        .btn:active {
+            transform: scale(0.96);
+            /* Click-down effect */
+        }
+        /* --- Specific Button Variations --- */
+        /* '0' button spans 2 columns */
+        
+        .btn-zero {
+            grid-column: span 2;
+        }
+        /* Operators (/, *, -, +, =) */
+        
+        .btn-operator {
+            background-color: var(--operator-bg);
+            color: #ffffff;
+        }
+        
+        .btn-operator:hover {
+            background-color: var(--operator-hover);
+        }
+        /* Equals button (same as operator for consistency) */
+        
+        .btn-equals {
+            background-color: var(--operator-bg);
+            color: #ffffff;
+        }
+        
+        .btn-equals:hover {
+            background-color: var(--operator-hover);
+        }
+        /* Clear/Delete buttons (AC, DEL) */
+        
+        .btn-action {
+            background-color: var(--action-bg);
+            color: #ffffff;
+        }
+        
+        .btn-action:hover {
+            background-color: var(--action-hover);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Calculator Structure -->
+    <div class="calculator-container">
+
+        <!-- Display Screen -->
+        <input type="text" id="display" class="display" placeholder="0" readonly>
+
+        <!-- Button Pad -->
+        <div class="buttons">
+            <!-- Row 1 -->
+            <button class="btn btn-action" onclick="clearDisplay()">AC</button>
+            <button class="btn btn-action" onclick="deleteLast()">DEL</button>
+            <button class="btn btn-operator" onclick="appendToDisplay('%')">%</button>
+            <button class="btn btn-operator" onclick="appendToDisplay('/')">/</button>
+
+            <!-- Row 2 -->
+            <button class="btn" onclick="appendToDisplay('7')">7</button>
+            <button class="btn" onclick="appendToDisplay('8')">8</button>
+            <button class="btn" onclick="appendToDisplay('9')">9</button>
+            <button class="btn btn-operator" onclick="appendToDisplay('*')">*</button>
+
+            <!-- Row 3 -->
+            <button class="btn" onclick="appendToDisplay('4')">4</button>
+            <button class="btn" onclick="appendToDisplay('5')">5</button>
+            <button class="btn" onclick="appendToDisplay('6')">6</button>
+            <button class="btn btn-operator" onclick="appendToDisplay('-')">-</button>
+
+            <!-- Row 4 -->
+            <button class="btn" onclick="appendToDisplay('1')">1</button>
+            <button class="btn" onclick="appendToDisplay('2')">2</button>
+            <button class="btn" onclick="appendToDisplay('3')">3</button>
+            <button class="btn btn-operator" onclick="appendToDisplay('+')">+</button>
+
+            <!-- Row 5 -->
+            <button class="btn btn-zero" onclick="appendToDisplay('0')">0</button>
+            <button class="btn" onclick="appendToDisplay('.')">.</button>
+            <button class="btn btn-equals" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+    <script>
+        const display = document.getElementById('display');
+
+        /**
+         * Appends the given value to the display.
+         * @param {string} value - The number or operator to add.
+         */
+        function appendToDisplay(value) {
+            // If display shows an error, clear it first
+            if (display.value === 'Error') {
+                display.value = value;
+            } else {
+                display.value += value;
+            }
+        }
+
+        /**
+         * Clears the entire display.
+         */
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        /**
+         * Deletes the last character from the display.
+         */
+        function deleteLast() {
+            if (display.value === 'Error') {
+                display.value = '';
+            } else {
+                display.value = display.value.slice(0, -1);
+            }
+        }
+
+        /**
+         * Calculates the result of the expression in the display.
+         */
+        function calculateResult() {
+            let expression = display.value;
+
+            if (expression === '' || expression === 'Error') {
+                display.value = '';
+                return;
+            }
+
+            // Basic sanitization: Only allow allowed characters.
+            // This is a simple defense against unsafe inputs.
+            const safeChars = /^[0-9+\-*/%.()]*$/;
+            if (!safeChars.test(expression)) {
+                display.value = 'Error';
+                return;
+            }
+
+            try {
+                // Use new Function() for safer evaluation than eval()
+                // It doesn't have access to the surrounding scope.
+                const result = new Function('return ' + expression)();
+
+                // Check for division by zero (Infinity) or invalid results (NaN)
+                if (!isFinite(result)) {
+                    display.value = 'Error';
+                } else {
+                    // Format to a reasonable number of decimal places if needed
+                    display.value = String(parseFloat(result.toFixed(10)));
+                }
+            } catch (error) {
+                // Catch syntax errors or other issues
+                display.value = 'Error';
+            }
+        }
+
+        /**
+         * Add keyboard support for a more "native" feel.
+         */
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+
+            if (key >= '0' && key <= '9') {
+                appendToDisplay(key);
+            } else if (['+', '-', '*', '/', '%', '(', ')', '.'].includes(key)) {
+                appendToDisplay(key);
+            } else if (key === 'Enter' || key === '=') {
+                event.preventDefault(); // Stop 'Enter' from submitting forms
+                calculateResult();
+            } else if (key === 'Backspace') {
+                deleteLast();
+            } else if (key === 'Escape' || key.toLowerCase() === 'c') {
+                clearDisplay();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
