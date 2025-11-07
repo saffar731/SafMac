@@ -7,6 +7,7 @@
     <title>SafMac OS</title>
     <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Custom styles to override Tailwind and define the macOS aesthetic */
         
@@ -180,10 +181,14 @@
             </svg>
             <span class="text-white text-xs mt-1 drop-shadow-md">Settings</span>
         </div>
+        <div class="w-20 h-20 flex flex-col items-center p-1 rounded-lg cursor-pointer hover:bg-white/20 transition" onclick="launchApp('google')">
+            <i class="fas fa-book  "></i> <span class="text-white text-xs mt-1 drop-shadow-md">SafSearch</span>
+        </div>
 
         <div class="w-20 h-20 flex flex-col items-center p-1 rounded-lg cursor-pointer hover:bg-white/20 transition" onclick="launchApp('EduDesk')" title="EduDesk">
             <img src="./EduDesk-The-solution-of-answers-10-08-2025_07_03_PM.png" alt="EduDesk Icon" class="w-10 h-10 object-cover rounded-xl drop-shadow-lg">
             <span class="text-white text-xs mt-1 drop-shadow-md">EduDesk</span>
+
         </div>
         <div class="w-20 h-20 flex flex-col items-center p-1 rounded-lg cursor-pointer hover:bg-white/20 transition" onclick="launchApp('Notes')" title="SafNotes">
             <span>📝</span>
@@ -280,6 +285,19 @@
                 title: 'SafNotes - SafMac',
                 icon: '📝',
                 url: './Notes app.html',
+                // Use a function to dynamically generate content with the iframe URL
+                contentHTML: ({
+                    url
+                }) => `
+                <div class="w-full h-full p-0">
+                    <iframe src="${url}" class="w-full h-full border-0 rounded-b-lg" frameborder="0"></iframe>
+                </div>
+            `
+            },
+            'google': {
+                title: 'SafSearch - SafMac',
+                icon: '📝',
+                url: './googlesearch.html',
                 // Use a function to dynamically generate content with the iframe URL
                 contentHTML: ({
                     url
