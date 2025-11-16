@@ -250,6 +250,9 @@
         <div class="dock-icon" title="Settings" onclick="launchApp('Settings')">
             <span>⚙️</span>
         </div>
+        <div class="dock-icon" title="3D Zombie Shooter" onclick="launchApp('3dZom')">
+            <span>🧟</span>
+        </div>
 
 
     </div>
@@ -281,10 +284,24 @@
                 </div>
             `
             },
+
             'Notes': {
                 title: 'SafNotes - SafMac',
                 icon: '📝',
                 url: './Notes app.html',
+                // Use a function to dynamically generate content with the iframe URL
+                contentHTML: ({
+                    url
+                }) => `
+                <div class="w-full h-full p-0">
+                    <iframe src="${url}" class="w-full h-full border-0 rounded-b-lg" frameborder="0"></iframe>
+                </div>
+            `
+            },
+            '3dZom': {
+                title: '3D Zombie Shooter - SafMac',
+                icon: '📝',
+                url: 'https://saffar731.github.io/zs/index.html',
                 // Use a function to dynamically generate content with the iframe URL
                 contentHTML: ({
                     url
