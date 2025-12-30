@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,187 +7,210 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); }
-        .result-appear { animation: fadeInUp 0.5s ease forwards; opacity: 0; }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(10px); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background: #f8fafc;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .result-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Animation for results appearing */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-results {
+            animation: slideUp 0.4s ease forwards;
         }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-900 transition-colors duration-500">
+<body class="text-slate-900">
 
-    <div id="homeView" class="flex flex-col items-center justify-center min-h-screen p-6 transition-all duration-500">
-        <div class="w-full max-w-2xl text-center">
-            <div class="flex items-center justify-center gap-4 mb-10 group">
-                <div class="p-4 bg-blue-600 rounded-2xl shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform">
+    <div id="homeView" class="flex flex-col items-center justify-center min-h-screen px-6">
+        <div class="w-full max-w-2xl text-center space-y-10">
+            
+            <div class="flex flex-col items-center gap-4">
+                <div class="w-20 h-20 bg-blue-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-blue-200">
                     <i class="fas fa-book-open text-4xl text-white"></i>
                 </div>
-                <h1 class="text-6xl font-black tracking-tighter bg-gradient-to-r from-blue-600 via-purple-600 to-red-500 bg-clip-text text-transparent">
+                <h1 class="text-5xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                     SafSearch
                 </h1>
             </div>
 
-            <div class="relative group">
-                <div class="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-[2rem] blur opacity-25 group-focus-within:opacity-50 transition duration-1000"></div>
-                <div class="relative flex items-center bg-white rounded-[2rem] shadow-xl border border-slate-100 p-2">
-                    <i class="fas fa-search ml-6 text-slate-400"></i>
-                    <input type="text" id="homeSearchInput" placeholder="Explore the universe..." 
-                        class="w-full p-4 outline-none text-lg bg-transparent" autocomplete="off">
-                    <button id="homeSearchBtn" class="bg-blue-600 text-white px-8 py-3 rounded-2xl font-bold hover:bg-blue-700 transition-all active:scale-95 mr-2">
+            <div class="relative w-full z-50">
+                <div class="flex items-center bg-white rounded-2xl shadow-2xl border border-slate-100 p-2 focus-within:ring-4 focus-within:ring-blue-100 transition-all">
+                    <div class="pl-4 pr-2 text-slate-400">
+                        <i class="fas fa-search text-lg"></i>
+                    </div>
+                    <input type="text" id="homeSearchInput" 
+                        class="w-full p-4 outline-none text-lg bg-transparent font-medium" 
+                        placeholder="Search the web freely..." 
+                        autocomplete="off">
+                    <button id="homeSearchBtn" class="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 active:scale-95 transition-all">
                         Search
                     </button>
                 </div>
             </div>
 
-            <div class="flex flex-wrap justify-center gap-3 mt-10">
-                <button onclick="quickSearch('Next.js 15 features')" class="glass border border-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white transition-all shadow-sm">🚀 Next.js 15</button>
-                <button onclick="quickSearch('Tailwind CSS v4')" class="glass border border-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white transition-all shadow-sm">🎨 Tailwind v4</button>
-                <button onclick="quickSearch('AI Agents')" class="glass border border-white px-4 py-2 rounded-full text-sm font-medium hover:bg-white transition-all shadow-sm">🤖 AI Agents</button>
+            <div class="flex flex-wrap justify-center gap-3">
+                <button onclick="quickSearch('Web Development')" class="bg-white border border-slate-200 px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:border-blue-400 hover:text-blue-600 transition-all">#WebDevelopment</button>
+                <button onclick="quickSearch('Artificial Intelligence')" class="bg-white border border-slate-200 px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:border-blue-400 hover:text-blue-600 transition-all">#AI</button>
+                <button onclick="quickSearch('Latest Tech News')" class="bg-white border border-slate-200 px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:border-blue-400 hover:text-blue-600 transition-all">#TechNews</button>
             </div>
         </div>
     </div>
 
-    <div id="resultsView" class="hidden min-h-screen flex flex-col">
-        <header class="sticky top-0 z-50 glass border-b border-slate-200 p-4">
+    <div id="resultsView" class="hidden min-h-screen flex flex-col bg-white">
+        <nav class="sticky top-0 z-50 glass-header border-b border-slate-100 px-6 py-4">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-6">
-                <div class="flex items-center gap-2 cursor-pointer" onclick="goHome()">
-                    <i class="fas fa-book-open text-2xl text-blue-600"></i>
-                    <span class="font-bold text-xl tracking-tighter">SafSearch</span>
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="goHome()">
+                    <div class="p-2 bg-blue-600 rounded-lg group-hover:rotate-12 transition-transform">
+                        <i class="fas fa-book-open text-white text-sm"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight">SafSearch</span>
                 </div>
-                <div class="flex-1 w-full max-w-3xl">
-                    <div class="relative flex items-center bg-slate-100 rounded-full px-5 py-2 group border border-transparent focus-within:bg-white focus-within:border-blue-300 transition-all">
-                        <i class="fas fa-search text-slate-400"></i>
-                        <input type="text" id="navSearchInput" class="w-full bg-transparent p-2 outline-none text-sm md:text-base">
-                        <button id="navSearchBtn" class="text-blue-600 font-semibold px-2">Search</button>
+                
+                <div class="flex-1 w-full max-w-3xl relative z-50">
+                    <div class="flex items-center bg-slate-100 rounded-xl px-4 py-1 focus-within:bg-white focus-within:ring-2 focus-within:ring-blue-500 transition-all border border-transparent">
+                        <i class="fas fa-search text-slate-400 mr-3"></i>
+                        <input type="text" id="navSearchInput" class="w-full bg-transparent p-2 outline-none font-medium">
+                        <button id="navSearchBtn" class="text-blue-600 font-bold px-3">Find</button>
                     </div>
                 </div>
             </div>
-        </header>
+        </nav>
 
-        <main class="max-w-4xl px-6 py-8 mx-auto w-full flex-1">
-            <div id="searchMeta" class="text-sm text-slate-500 mb-6"></div>
+        <main class="max-w-5xl w-full mx-auto px-6 py-8">
+            <div id="statusInfo" class="text-sm text-slate-500 mb-8 pb-4 border-b border-slate-50"></div>
             
-            <div id="loading" class="hidden space-y-8 mt-10">
-                <div class="animate-pulse flex flex-col gap-4">
-                    <div class="h-4 bg-slate-200 rounded w-1/4"></div>
-                    <div class="h-6 bg-slate-200 rounded w-3/4"></div>
-                    <div class="h-4 bg-slate-200 rounded w-full"></div>
-                </div>
+            <div id="loading" class="hidden space-y-10 animate-pulse">
+                <div class="space-y-3"><div class="h-4 bg-slate-200 rounded w-1/4"></div><div class="h-6 bg-slate-200 rounded w-3/4"></div><div class="h-4 bg-slate-100 rounded w-full"></div></div>
+                <div class="space-y-3"><div class="h-4 bg-slate-200 rounded w-1/4"></div><div class="h-6 bg-slate-200 rounded w-3/4"></div><div class="h-4 bg-slate-100 rounded w-full"></div></div>
             </div>
 
-            <div id="resultsList" class="space-y-10"></div>
+            <div id="resultsList" class="space-y-8"></div>
         </main>
     </div>
 
     <script>
+        // API CONFIGURATION (Untouched as requested)
         const API_KEY = 'AIzaSyDBtCFcrro8OwvLvQ-3UifBNMtUKxawyCw';
         const SEARCH_ENGINE_ID = 'b488fd849d7a04e36';
 
+        // UI ELEMENTS
         const homeView = document.getElementById('homeView');
         const resultsView = document.getElementById('resultsView');
         const homeInput = document.getElementById('homeSearchInput');
         const navInput = document.getElementById('navSearchInput');
         const resultsList = document.getElementById('resultsList');
         const loading = document.getElementById('loading');
-        const searchMeta = document.getElementById('searchMeta');
+        const statusInfo = document.getElementById('statusInfo');
 
-        // Logic to handle "Separate Pages" via URL parameters
-        window.addEventListener('popstate', handleRouting);
-        window.addEventListener('load', handleRouting);
+        // ROUTING LOGIC
+        window.addEventListener('popstate', route);
+        window.addEventListener('DOMContentLoaded', route);
 
-        function handleRouting() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const query = urlParams.get('q');
-
+        function route() {
+            const params = new URLSearchParams(window.location.search);
+            const query = params.get('q');
             if (query) {
-                showResultsPage(query);
+                renderResults(query);
             } else {
-                showHomePage();
+                renderHome();
             }
         }
 
-        function showHomePage() {
+        function renderHome() {
             homeView.classList.remove('hidden');
             resultsView.classList.add('hidden');
             document.title = "SafSearch | Modern Discovery";
+            homeInput.focus();
         }
 
-        async function showResultsPage(query) {
+        async function renderResults(query) {
             homeView.classList.add('hidden');
             resultsView.classList.remove('hidden');
             navInput.value = query;
             document.title = `${query} - SafSearch`;
             
-            await fetchResults(query);
-        }
-
-        async function fetchResults(query) {
             loading.classList.remove('hidden');
             resultsList.innerHTML = '';
-            searchMeta.innerHTML = '';
+            statusInfo.innerHTML = 'Searching SafSearch database...';
 
             try {
-                const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`);
+                const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${encodeURIComponent(query)}`;
+                const response = await fetch(url);
                 const data = await response.json();
                 
                 loading.classList.add('hidden');
-                
+
                 if (data.items) {
-                    searchMeta.innerHTML = `Found ${data.searchInformation.formattedTotalResults} results for <span class="font-bold text-slate-800">"${query}"</span>`;
-                    
-                    data.items.forEach((item, index) => {
-                        const card = document.createElement('div');
-                        card.className = 'result-appear group';
-                        card.style.animationDelay = `${index * 0.05}s`;
-                        card.innerHTML = `
+                    statusInfo.innerHTML = `About ${data.searchInformation.formattedTotalResults} results found for <b>${query}</b>`;
+                    data.items.forEach((item, i) => {
+                        const div = document.createElement('div');
+                        div.className = 'result-card animate-results group';
+                        div.style.animationDelay = `${i * 0.07}s`;
+                        div.innerHTML = `
                             <div class="flex flex-col">
-                                <span class="text-xs text-emerald-700 truncate mb-1">${item.displayLink}</span>
-                                <a href="${item.link}" target="_blank" class="text-xl text-blue-700 font-medium hover:underline group-hover:text-blue-800 transition-colors">
+                                <span class="text-xs font-semibold text-emerald-600 mb-1 truncate">${item.displayLink}</span>
+                                <a href="${item.link}" target="_blank" class="text-xl font-semibold text-blue-600 hover:text-blue-800 transition-colors">
                                     ${item.title}
                                 </a>
-                                <p class="text-slate-600 text-sm mt-2 leading-relaxed max-w-2xl">${item.snippet}</p>
+                                <p class="text-slate-600 mt-2 text-sm leading-relaxed max-w-3xl">${item.snippet}</p>
                             </div>
                         `;
-                        resultsList.appendChild(card);
+                        resultsList.appendChild(div);
                     });
                 } else {
-                    resultsList.innerHTML = `<div class="text-center py-20 text-slate-500">No results found for your query.</div>`;
+                    resultsList.innerHTML = `<div class="text-center py-20"><p class="text-slate-400">No results found for "${query}"</p></div>`;
                 }
-            } catch (error) {
+            } catch (err) {
                 loading.classList.add('hidden');
-                resultsList.innerHTML = `<div class="p-4 bg-red-50 text-red-600 rounded-xl">Error fetching results. Please check your API limits.</div>`;
+                statusInfo.innerHTML = `<span class="text-red-500">Search error. Please verify API configuration.</span>`;
             }
         }
 
-        // Trigger Search Functions
-        function initiateSearch(input) {
-            const query = input.value.trim();
+        // NAVIGATION ACTIONS
+        function executeSearch(inputElement) {
+            const query = inputElement.value.trim();
             if (query) {
-                const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + `?q=${encodeURIComponent(query)}`;
-                window.history.pushState({ path: newUrl }, '', newUrl);
-                showResultsPage(query);
+                const url = new URL(window.location);
+                url.searchParams.set('q', query);
+                window.history.pushState({}, '', url);
+                renderResults(query);
             }
         }
 
-        function quickSearch(val) {
-            homeInput.value = val;
-            initiateSearch(homeInput);
+        function quickSearch(text) {
+            homeInput.value = text;
+            executeSearch(homeInput);
         }
 
         function goHome() {
             window.history.pushState({}, '', window.location.pathname);
-            showHomePage();
+            renderHome();
         }
 
-        // Event Listeners
-        document.getElementById('homeSearchBtn').onclick = () => initiateSearch(homeInput);
-        document.getElementById('navSearchBtn').onclick = () => initiateSearch(navInput);
-        
-        homeInput.onkeypress = (e) => e.key === 'Enter' && initiateSearch(homeInput);
-        navInput.onkeypress = (e) => e.key === 'Enter' && initiateSearch(navInput);
+        // LISTENERS
+        document.getElementById('homeSearchBtn').onclick = () => executeSearch(homeInput);
+        document.getElementById('navSearchBtn').onclick = () => executeSearch(navInput);
+        homeInput.onkeydown = (e) => e.key === 'Enter' && executeSearch(homeInput);
+        navInput.onkeydown = (e) => e.key === 'Enter' && executeSearch(navInput);
     </script>
 </body>
 </html>
