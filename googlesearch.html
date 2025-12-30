@@ -9,7 +9,12 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f9fafb; }
-        .search-focus:focus-within { ring: 4px solid #dbeafe; border-color: #3b82f6; }
+        .search-focus:focus-within { 
+            ring: 4px solid #dbeafe; 
+            border-color: #3b82f6; 
+        }
+        /* Fix for potential input bugs */
+        input { -webkit-appearance: none; }
     </style>
 </head>
 <body>
@@ -23,15 +28,15 @@
                 <p class="text-slate-500 mt-2">Powered by SafMac Technology</p>
             </div>
 
-            <div class="relative z-[9999]"> 
+            <div class="relative w-full max-w-xl mx-auto">
                 <div class="search-focus flex items-center bg-white border-2 border-slate-200 rounded-2xl p-2 transition-all shadow-lg">
                     <div class="px-4 text-slate-400">
                         <i class="fas fa-search"></i>
                     </div>
                     <input type="text" id="homeSearchInput" 
-                        class="w-full py-4 px-2 text-xl outline-none bg-transparent text-slate-800 relative z-[9999] pointer-events-auto" 
-                        placeholder="Type your search here..." 
-                        style="display: block !important; visibility: visible !important;">
+                        class="w-full py-4 px-2 text-xl outline-none bg-transparent text-slate-800" 
+                        placeholder="Type your search here..."
+                        autocomplete="off">
                     <button id="homeSearchBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-8 py-4 rounded-xl transition-transform active:scale-95">
                         Search
                     </button>
@@ -55,7 +60,7 @@
                     <span class="font-bold text-lg hidden md:block">SafSearch</span>
                 </div>
                 <div class="flex-1 flex items-center bg-slate-100 rounded-xl px-4 py-1 border border-transparent focus-within:border-blue-400 focus-within:bg-white transition-all">
-                    <input type="text" id="navSearchInput" class="w-full p-2 bg-transparent outline-none text-slate-800">
+                    <input type="text" id="navSearchInput" class="w-full p-2 bg-transparent outline-none text-slate-800" autocomplete="off">
                     <button id="navSearchBtn" class="text-blue-600 font-bold px-2">Search</button>
                 </div>
             </div>
@@ -71,7 +76,7 @@
     </div>
 
     <script>
-        // API CONFIG (Untouched)
+        // API CONFIG
         const API_KEY = 'AIzaSyDBtCFcrro8OwvLvQ-3UifBNMtUKxawyCw';
         const SEARCH_ENGINE_ID = 'b488fd849d7a04e36';
 
@@ -84,13 +89,12 @@
         const loader = document.getElementById('loader');
         const statusText = document.getElementById('statusText');
 
-        // Force Focus Fix: This ensures the input is active when the page loads
+        // Initialize
         window.onload = () => {
             hInput.focus();
             checkUrl();
         };
 
-        // Routing Logic
         window.onpopstate = () => checkUrl();
 
         function checkUrl() {
@@ -145,9 +149,8 @@
             }
         }
 
-        // Action Handlers
-        function startSearch(input) {
-            const val = input.value.trim();
+        function startSearch(inputElement) {
+            const val = inputElement.value.trim();
             if (val) {
                 const url = new URL(window.location);
                 url.searchParams.set('q', val);
@@ -169,8 +172,13 @@
         // Listeners
         document.getElementById('homeSearchBtn').onclick = () => startSearch(hInput);
         document.getElementById('navSearchBtn').onclick = () => startSearch(nInput);
-        hInput.onkeydown = (e) => e.key === 'Enter' && startSearch(hInput);
-        nInput.onkeydown = (e) => e.key === 'Enter' && startSearch(nInput);
+        
+        hInput.onkeydown = (e) => {
+            if (e.key === 'Enter') startSearch(hInput);
+        };
+        nInput.onkeydown = (e) => {
+            if (e.key === 'Enter') startSearch(nInput);
+        };
     </script>
 </body>
 </html>
