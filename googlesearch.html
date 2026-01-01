@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafSearch | Advanced Intelligence</title>
+    <title>SafSearch | Intelligent Discovery</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -11,22 +11,27 @@
         body { font-family: 'Poppins', sans-serif; background-color: #020617; color: #f8fafc; overflow-x: hidden; }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .nav-search-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; }
-        .image-card img { transition: transform 0.3s ease; }
-        .image-card:hover img { transform: scale(1.05); }
+        .search-box:focus-within { border-color: #3b82f6; box-shadow: 0 0 25px rgba(59, 130, 246, 0.2); }
+        .image-card { transition: all 0.3s ease; }
+        .image-card:hover { transform: translateY(-5px); }
+        .tab-btn { transition: all 0.2s; position: relative; }
+        #appDropdown { transform-origin: top right; transition: all 0.2s ease; }
     </style>
 </head>
 <body class="antialiased">
 
     <nav class="fixed top-0 w-full z-[100] p-4 flex justify-between items-center glass border-b border-white/5">
         <div class="flex items-center gap-8">
-            <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
-                <div class="p-2 bg-blue-600 rounded-xl shadow-lg shadow-blue-600/20"><i class="fas fa-rocket text-white"></i></div>
-                <span class="font-bold text-xl hidden md:block">SafSearch</span>
+            <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href=window.location.pathname">
+                <div class="p-2 bg-blue-600 rounded-xl group-hover:rotate-12 transition-transform shadow-lg shadow-blue-500/20">
+                    <i class="fas fa-rocket text-white"></i>
+                </div>
+                <span class="font-bold text-xl hidden md:block tracking-tight">SafSearch</span>
             </div>
             
-            <div id="navSearchContainer" class="hidden flex items-center bg-slate-900 border border-white/10 rounded-full px-4 py-1 w-full max-w-md">
-                <input type="text" id="navInput" class="bg-transparent w-full outline-none text-sm py-1" placeholder="Search again...">
-                <button onclick="executeSearch('navInput')" class="text-blue-500 p-2"><i class="fas fa-search"></i></button>
+            <div id="navSearchContainer" class="hidden flex items-center bg-slate-950/80 border border-white/10 rounded-full px-4 py-1 w-full max-w-md focus-within:border-blue-500/50 transition-all">
+                <input type="text" id="navInput" class="bg-transparent w-full outline-none text-sm py-2" placeholder="Search again...">
+                <button onclick="handleSearch('navInput')" class="text-blue-500 p-2 hover:scale-110 transition-transform"><i class="fas fa-search"></i></button>
             </div>
         </div>
 
@@ -36,147 +41,153 @@
             </button>
         </div>
 
-        <div id="appDropdown" class="hidden absolute top-16 right-4 w-80 glass rounded-[2rem] p-6 shadow-2xl">
-            <p class="text-[10px] uppercase tracking-widest text-slate-500 mb-5 font-bold">Productivity Suite</p>
+        <div id="appDropdown" class="hidden absolute top-16 right-4 w-80 glass rounded-[2rem] p-6 shadow-2xl z-[110]">
+            <p class="text-[10px] uppercase tracking-widest text-slate-500 mb-5 font-bold">App Ecosystem</p>
             <div class="grid grid-cols-3 gap-6">
-                <a href="https://mail.google.com" target="_blank" class="flex flex-col items-center group"><i class="fas fa-envelope text-xl text-slate-400 group-hover:text-red-500"></i><span class="text-[10px] mt-2">Gmail</span></a>
-                <a href="https://drive.google.com" target="_blank" class="flex flex-col items-center group"><i class="fab fa-google-drive text-xl text-slate-400 group-hover:text-yellow-500"></i><span class="text-[10px] mt-2">Drive</span></a>
-                <a href="https://calendar.google.com" target="_blank" class="flex flex-col items-center group"><i class="fas fa-calendar-alt text-xl text-slate-400 group-hover:text-blue-400"></i><span class="text-[10px] mt-2">Calendar</span></a>
+                <a href="https://gmail.com" target="_blank" class="flex flex-col items-center group"><i class="fas fa-envelope text-xl text-slate-400 group-hover:text-red-500"></i><span class="text-[10px] mt-2">Gmail</span></a>
                 <a href="https://youtube.com" target="_blank" class="flex flex-col items-center group"><i class="fab fa-youtube text-xl text-slate-400 group-hover:text-red-600"></i><span class="text-[10px] mt-2">YouTube</span></a>
                 <a href="https://github.com" target="_blank" class="flex flex-col items-center group"><i class="fab fa-github text-xl text-slate-400 group-hover:text-white"></i><span class="text-[10px] mt-2">GitHub</span></a>
-                <a href="https://notion.so" target="_blank" class="flex flex-col items-center group"><i class="fas fa-sticky-note text-xl text-slate-400 group-hover:text-gray-300"></i><span class="text-[10px] mt-2">Notion</span></a>
+                <a href="https://notion.so" target="_blank" class="flex flex-col items-center group"><i class="fas fa-file-alt text-xl text-slate-400 group-hover:text-gray-300"></i><span class="text-[10px] mt-2">Notion</span></a>
+                <a href="https://openai.com" target="_blank" class="flex flex-col items-center group"><i class="fas fa-bolt text-xl text-slate-400 group-hover:text-emerald-400"></i><span class="text-[10px] mt-2">ChatGPT</span></a>
+                <a href="https://outlook.com" target="_blank" class="flex flex-col items-center group"><i class="fas fa-paper-plane text-xl text-slate-400 group-hover:text-blue-500"></i><span class="text-[10px] mt-2">Outlook</span></a>
             </div>
         </div>
     </nav>
 
-    <div id="homeView" class="min-h-screen flex flex-col items-center justify-center p-6">
-        <h1 class="text-8xl font-bold tracking-tighter bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent mb-12">SafSearch</h1>
-        <div class="flex items-center bg-slate-900/50 border border-white/10 rounded-[2.5rem] p-2 w-full max-w-2xl focus-within:border-blue-500 transition-all">
+    <div id="homeView" class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+        <h1 class="text-7xl md:text-8xl font-bold tracking-tighter bg-gradient-to-b from-white to-slate-600 bg-clip-text text-transparent mb-12">SafSearch</h1>
+        <div class="search-box flex items-center bg-slate-900/40 border border-white/10 rounded-[2.5rem] p-2 w-full max-w-2xl transition-all">
             <div class="px-6 text-slate-500"><i class="fas fa-search"></i></div>
-            <input type="text" id="mainInput" class="w-full py-5 text-xl outline-none bg-transparent" placeholder="Search web or images...">
-            <button onclick="executeSearch('mainInput')" class="bg-blue-600 px-10 py-5 rounded-[2rem] font-bold hover:bg-blue-500 transition-all">Search</button>
+            <input type="text" id="mainInput" class="w-full py-5 text-xl outline-none bg-transparent" placeholder="Web, Images, Intelligence...">
+            <button onclick="handleSearch('mainInput')" class="bg-blue-600 px-10 py-5 rounded-[2rem] font-bold hover:bg-blue-500 transition-all active:scale-95 shadow-xl shadow-blue-600/20">Search</button>
         </div>
     </div>
 
     <div id="resultsView" class="hidden min-h-screen pt-28 max-w-6xl mx-auto p-6">
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div class="flex gap-6 border-b border-white/10 w-full md:w-auto">
-                <button onclick="switchTab('web')" id="webTab" class="pb-2 px-2 nav-search-active font-semibold transition-all">All Results</button>
-                <button onclick="switchTab('image')" id="imageTab" class="pb-2 px-2 text-slate-500 hover:text-white transition-all">Images</button>
+        <div class="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
+            <div class="flex gap-8 border-b border-white/10 w-full md:w-auto">
+                <button onclick="switchTab('web')" id="webTab" class="tab-btn pb-3 px-2 nav-search-active font-semibold">Web Results</button>
+                <button onclick="switchTab('image')" id="imageTab" class="tab-btn pb-3 px-2 text-slate-500 hover:text-white">Image Grid</button>
             </div>
-            <div class="text-[10px] text-slate-500 font-mono bg-white/5 px-3 py-1 rounded-full">
-                SEARCH_ID: <span id="displaySearchId" class="text-blue-400"></span>
-            </div>
-        </div>
-
-        <div id="webResults" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
-            <div class="lg:col-span-2 space-y-10" id="webList"></div>
-            <div class="hidden lg:block glass p-6 rounded-3xl h-fit sticky top-32">
-                <h4 class="font-bold mb-4">Knowledge Panel</h4>
-                <p id="wikiSnippet" class="text-sm text-slate-400 leading-relaxed">Intelligence gathered for your query.</p>
+            
+            <div class="flex items-center gap-3">
+                <div class="text-[10px] font-mono bg-blue-600/10 text-blue-400 px-4 py-2 rounded-xl border border-blue-500/20">
+                    SEARCH_ID: <span id="currentId"></span>
+                </div>
+                <button onclick="copyLink()" class="p-2 bg-white/5 rounded-xl hover:bg-white/10 transition-colors text-xs text-slate-400" title="Copy Search Link">
+                    <i class="fas fa-link"></i>
+                </button>
             </div>
         </div>
 
-        <div id="imageResults" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+        <div id="webContent" class="space-y-10 animate-fade-in"></div>
+        <div id="imageContent" class="hidden grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+        
+        <div id="loader" class="hidden py-20 text-center">
+            <div class="inline-block w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        </div>
     </div>
 
     <script>
         const API_KEY = 'AIzaSyDBtCFcrro8OwvLvQ-3UifBNMtUKxawyCw';
         const SEARCH_ID = 'b488fd849d7a04e36';
-        let currentQuery = "";
 
-        // GENERATE UNIQUE SEARCH ID
-        function generateSearchID() {
-            return 'SID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
-        }
+        // 1. URL PERSISTENCE: Run search automatically if URL has parameters
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const q = params.get('q');
+            const id = params.get('id');
+            if (q && id) {
+                performSearch(q, id);
+            }
+        };
 
-        async function executeSearch(inputId) {
+        // 2. SEARCH HANDLER: Create ID and update URL
+        function handleSearch(inputId) {
             const query = document.getElementById(inputId).value.trim();
             if (!query) return;
-            currentQuery = query;
 
-            // UI Transitions
+            const sid = 'SID-' + Math.random().toString(36).substr(2, 7).toUpperCase();
+            
+            // Push to URL without refreshing
+            const newUrl = `${window.location.pathname}?q=${encodeURIComponent(query)}&id=${sid}`;
+            window.history.pushState({ path: newUrl }, '', newUrl);
+
+            performSearch(query, sid);
+        }
+
+        async function performSearch(query, sid) {
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('resultsView').classList.remove('hidden');
             document.getElementById('navSearchContainer').classList.remove('hidden');
             document.getElementById('navInput').value = query;
-            
-            // Set Search ID
-            document.getElementById('displaySearchId').innerText = generateSearchID();
+            document.getElementById('currentId').innerText = sid;
+            document.getElementById('loader').classList.remove('hidden');
 
-            // Fetch Web Results
-            fetchResults(query, 'web');
-            // Fetch Images
-            fetchResults(query, 'image');
+            // Concurrent API fetching
+            fetchData(query, 'web');
+            fetchData(query, 'image');
         }
 
-        async function fetchResults(query, type) {
+        async function fetchData(query, type) {
             const isImage = type === 'image';
             const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ID}&q=${encodeURIComponent(query)}${isImage ? '&searchType=image' : ''}`;
             
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                
-                if (isImage) renderImages(data.items);
-                else renderWeb(data.items);
-            } catch (err) { console.error(err); }
+                document.getElementById('loader').classList.add('hidden');
+                if (isImage) renderImages(data.items); else renderWeb(data.items);
+            } catch (err) { console.error("API Gateway Error", err); }
         }
 
         function renderWeb(items) {
-            const list = document.getElementById('webList');
-            list.innerHTML = '';
-            if(!items) return;
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = "group";
-                div.innerHTML = `
-                    <p class="text-xs text-slate-500 mb-1">${item.displayLink}</p>
-                    <a href="${item.link}" target="_blank" class="text-xl text-blue-400 font-semibold group-hover:underline">${item.title}</a>
-                    <p class="text-slate-400 text-sm mt-2">${item.snippet}</p>
-                `;
-                list.appendChild(div);
-            });
-            document.getElementById('wikiSnippet').innerText = items[0].snippet;
+            const container = document.getElementById('webContent');
+            container.innerHTML = items ? items.map(item => `
+                <div class="group border-b border-white/5 pb-8 hover:bg-white/[0.01] transition-colors p-4 rounded-2xl">
+                    <p class="text-[10px] text-blue-500/60 mb-1 font-mono">${item.displayLink}</p>
+                    <a href="${item.link}" target="_blank" class="text-xl text-blue-400 font-semibold group-hover:text-blue-300 transition-colors underline-offset-4 hover:underline">${item.title}</a>
+                    <p class="text-slate-400 text-sm mt-3 leading-relaxed font-light">${item.snippet}</p>
+                </div>
+            `).join('') : '<p class="text-center py-20 text-slate-500">No matching intelligence found.</p>';
         }
 
         function renderImages(items) {
-            const container = document.getElementById('imageResults');
-            container.innerHTML = '';
-            if(!items) return;
-            items.forEach(item => {
-                const div = document.createElement('div');
-                div.className = "image-card rounded-xl overflow-hidden glass cursor-pointer";
-                div.onclick = () => window.open(item.link, '_blank');
-                div.innerHTML = `
-                    <img src="${item.link}" class="w-full h-48 object-cover">
-                    <div class="p-2 text-[10px] text-slate-500 truncate">${item.title}</div>
-                `;
-                container.appendChild(div);
-            });
+            const container = document.getElementById('imageContent');
+            container.innerHTML = items ? items.map(item => `
+                <div class="image-card group relative border border-white/10 rounded-2xl overflow-hidden glass shadow-xl">
+                    <img src="${item.link}" class="w-full h-44 object-cover bg-slate-900 cursor-pointer" onclick="window.open('${item.link}', '_blank')">
+                    <div class="p-3">
+                        <p class="text-[10px] text-slate-500 truncate mb-2">${item.title}</p>
+                        <a href="${item.link}" download class="block text-center text-[10px] font-bold bg-white/5 hover:bg-blue-600 transition-colors py-2 rounded-lg">
+                            <i class="fas fa-download mr-1"></i> DOWNLOAD
+                        </a>
+                    </div>
+                </div>
+            `).join('') : '<p class="col-span-full text-center py-20 text-slate-500">No images found.</p>';
         }
 
         function switchTab(tab) {
             const isWeb = tab === 'web';
-            document.getElementById('webResults').classList.toggle('hidden', !isWeb);
-            document.getElementById('imageResults').classList.toggle('hidden', isWeb);
-            
-            document.getElementById('webTab').className = isWeb ? "pb-2 px-2 nav-search-active font-semibold" : "pb-2 px-2 text-slate-500 hover:text-white";
-            document.getElementById('imageTab').className = !isWeb ? "pb-2 px-2 nav-search-active font-semibold" : "pb-2 px-2 text-slate-500 hover:text-white";
+            document.getElementById('webContent').classList.toggle('hidden', !isWeb);
+            document.getElementById('imageContent').classList.toggle('hidden', isWeb);
+            document.getElementById('webTab').className = isWeb ? "tab-btn pb-3 px-2 nav-search-active font-semibold" : "tab-btn pb-3 px-2 text-slate-500 hover:text-white";
+            document.getElementById('imageTab').className = !isWeb ? "tab-btn pb-3 px-2 nav-search-active font-semibold" : "tab-btn pb-3 px-2 text-slate-500 hover:text-white";
         }
 
-        function goHome() { location.reload(); }
+        function copyLink() {
+            navigator.clipboard.writeText(window.location.href);
+            alert("Search ID Link copied to clipboard!");
+        }
 
-        // Dropdown Logic
+        // --- INTERACTION LOGIC ---
         document.getElementById('appLauncherBtn').onclick = (e) => {
             e.stopPropagation();
             document.getElementById('appDropdown').classList.toggle('hidden');
         };
         window.onclick = () => document.getElementById('appDropdown').classList.add('hidden');
-        
-        // Key listener
-        document.getElementById('mainInput').onkeydown = (e) => { if(e.key === 'Enter') executeSearch('mainInput'); };
-        document.getElementById('navInput').onkeydown = (e) => { if(e.key === 'Enter') executeSearch('navInput'); };
+        document.getElementById('mainInput').onkeydown = (e) => { if(e.key === 'Enter') handleSearch('mainInput'); };
+        document.getElementById('navInput').onkeydown = (e) => { if(e.key === 'Enter') handleSearch('navInput'); };
     </script>
 </body>
 </html>
