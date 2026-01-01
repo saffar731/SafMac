@@ -3,230 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SafSearch | Secure Intelligence</title>
+    <title>SafSearch | Advanced Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
         body { font-family: 'Poppins', sans-serif; background-color: #020617; color: #f8fafc; overflow-x: hidden; }
-        .glass { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .search-box { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .search-box:focus-within { border-color: #3b82f6; box-shadow: 0 0 30px rgba(59, 130, 246, 0.2); transform: translateY(-2px); }
-        .result-item { border-bottom: 1px solid rgba(255, 255, 255, 0.05); transition: all 0.2s; }
-        .result-item:hover { background: rgba(255, 255, 255, 0.02); padding-left: 10px; border-left: 3px solid #3b82f6; }
-        #appDropdown, #profileDropdown { transform-origin: top right; transition: all 0.2s ease; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .nav-search-active { border-bottom: 2px solid #3b82f6; color: #3b82f6; }
+        .image-card img { transition: transform 0.3s ease; }
+        .image-card:hover img { transform: scale(1.05); }
     </style>
 </head>
 <body class="antialiased">
 
-    <nav class="fixed top-0 w-full z-[100] p-4 flex justify-between items-center bg-slate-950/50 backdrop-blur-xl border-b border-white/5">
-        <div class="flex items-center gap-3 cursor-pointer group" onclick="goHome()">
-            <div class="p-2 bg-blue-600 rounded-xl shadow-lg shadow-blue-600/20 group-hover:rotate-12 transition-transform">
-                <i class="fas fa-rocket text-white"></i>
+    <nav class="fixed top-0 w-full z-[100] p-4 flex justify-between items-center glass border-b border-white/5">
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-3 cursor-pointer" onclick="location.reload()">
+                <div class="p-2 bg-blue-600 rounded-xl shadow-lg shadow-blue-600/20"><i class="fas fa-rocket text-white"></i></div>
+                <span class="font-bold text-xl hidden md:block">SafSearch</span>
             </div>
-            <span class="font-bold text-xl tracking-tight">SafSearch</span>
+            
+            <div id="navSearchContainer" class="hidden flex items-center bg-slate-900 border border-white/10 rounded-full px-4 py-1 w-full max-w-md">
+                <input type="text" id="navInput" class="bg-transparent w-full outline-none text-sm py-1" placeholder="Search again...">
+                <button onclick="executeSearch('navInput')" class="text-blue-500 p-2"><i class="fas fa-search"></i></button>
+            </div>
         </div>
 
         <div class="flex items-center gap-4">
             <button id="appLauncherBtn" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-colors">
-                <i class="fas fa-th text-slate-400 hover:text-white"></i>
+                <i class="fas fa-th text-slate-400"></i>
             </button>
-            
-            <div class="relative">
-                <button id="profileBtn" class="w-10 h-10 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center overflow-hidden">
-                    <i class="fas fa-user text-slate-500" id="userIcon"></i>
-                    <img id="userAvatar" class="hidden w-full h-full object-cover">
-                </button>
-                
-                <div id="profileDropdown" class="hidden absolute top-14 right-0 w-64 glass rounded-2xl p-2 shadow-2xl">
-                    <div id="loggedOutContent" class="p-2">
-                        <button onclick="openAuth()" class="w-full text-left p-3 hover:bg-white/5 rounded-xl text-sm font-semibold text-blue-400">Sign In / Register</button>
-                    </div>
-                    <div id="loggedInContent" class="hidden p-2">
-                        <div class="px-3 py-3 border-b border-white/5 mb-2">
-                            <p class="text-[10px] uppercase text-slate-500 font-bold tracking-widest">Signed in as</p>
-                            <p id="userEmailDisplay" class="text-xs text-slate-200 truncate"></p>
-                        </div>
-                        <button onclick="handleLogout()" class="w-full text-left p-3 hover:bg-red-500/10 rounded-xl text-sm text-red-400 transition-colors">
-                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <div id="appDropdown" class="hidden absolute top-20 right-4 w-80 glass rounded-[2rem] p-6 shadow-2xl z-[110]">
-            <p class="text-[10px] uppercase tracking-widest text-slate-500 mb-5 font-bold">Quick Access</p>
+        <div id="appDropdown" class="hidden absolute top-16 right-4 w-80 glass rounded-[2rem] p-6 shadow-2xl">
+            <p class="text-[10px] uppercase tracking-widest text-slate-500 mb-5 font-bold">Productivity Suite</p>
             <div class="grid grid-cols-3 gap-6">
-                <a href="https://google.com" target="_blank" class="flex flex-col items-center group">
-                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white/5 group-hover:bg-red-500/20 transition-colors">
-                        <i class="fab fa-google text-xl text-slate-400 group-hover:text-red-500"></i>
-                    </div>
-                    <span class="text-[10px] mt-2 text-slate-500">Google</span>
-                </a>
-                <a href="https://outlook.com" target="_blank" class="flex flex-col items-center group">
-                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white/5 group-hover:bg-blue-500/20 transition-colors">
-                        <i class="fas fa-envelope text-xl text-slate-400 group-hover:text-blue-500"></i>
-                    </div>
-                    <span class="text-[10px] mt-2 text-slate-500">Outlook</span>
-                </a>
-                <a href="https://openai.com" target="_blank" class="flex flex-col items-center group">
-                    <div class="w-12 h-12 flex items-center justify-center rounded-2xl bg-white/5 group-hover:bg-emerald-500/20 transition-colors">
-                        <i class="fas fa-bolt text-xl text-slate-400 group-hover:text-emerald-400"></i>
-                    </div>
-                    <span class="text-[10px] mt-2 text-slate-500">ChatGPT</span>
-                </a>
+                <a href="https://mail.google.com" target="_blank" class="flex flex-col items-center group"><i class="fas fa-envelope text-xl text-slate-400 group-hover:text-red-500"></i><span class="text-[10px] mt-2">Gmail</span></a>
+                <a href="https://drive.google.com" target="_blank" class="flex flex-col items-center group"><i class="fab fa-google-drive text-xl text-slate-400 group-hover:text-yellow-500"></i><span class="text-[10px] mt-2">Drive</span></a>
+                <a href="https://calendar.google.com" target="_blank" class="flex flex-col items-center group"><i class="fas fa-calendar-alt text-xl text-slate-400 group-hover:text-blue-400"></i><span class="text-[10px] mt-2">Calendar</span></a>
+                <a href="https://youtube.com" target="_blank" class="flex flex-col items-center group"><i class="fab fa-youtube text-xl text-slate-400 group-hover:text-red-600"></i><span class="text-[10px] mt-2">YouTube</span></a>
+                <a href="https://github.com" target="_blank" class="flex flex-col items-center group"><i class="fab fa-github text-xl text-slate-400 group-hover:text-white"></i><span class="text-[10px] mt-2">GitHub</span></a>
+                <a href="https://notion.so" target="_blank" class="flex flex-col items-center group"><i class="fas fa-sticky-note text-xl text-slate-400 group-hover:text-gray-300"></i><span class="text-[10px] mt-2">Notion</span></a>
             </div>
         </div>
     </nav>
 
     <div id="homeView" class="min-h-screen flex flex-col items-center justify-center p-6">
-        <div class="w-full max-w-2xl text-center space-y-10">
-            <h1 class="text-7xl font-bold tracking-tighter bg-gradient-to-b from-white to-slate-600 bg-clip-text text-transparent">SafSearch</h1>
-            <div class="search-box flex items-center bg-slate-900/40 rounded-[2.5rem] p-2 backdrop-blur-md">
-                <div class="px-6 text-slate-500"><i class="fas fa-search"></i></div>
-                <input type="text" id="searchInput" class="w-full py-5 text-xl outline-none bg-transparent placeholder-slate-600" placeholder="Type your query...">
-                <button onclick="executeSearch()" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-10 py-5 rounded-[2rem] transition-all shadow-lg shadow-blue-600/20 active:scale-95">
-                    Search
-                </button>
-            </div>
+        <h1 class="text-8xl font-bold tracking-tighter bg-gradient-to-b from-white to-slate-500 bg-clip-text text-transparent mb-12">SafSearch</h1>
+        <div class="flex items-center bg-slate-900/50 border border-white/10 rounded-[2.5rem] p-2 w-full max-w-2xl focus-within:border-blue-500 transition-all">
+            <div class="px-6 text-slate-500"><i class="fas fa-search"></i></div>
+            <input type="text" id="mainInput" class="w-full py-5 text-xl outline-none bg-transparent" placeholder="Search web or images...">
+            <button onclick="executeSearch('mainInput')" class="bg-blue-600 px-10 py-5 rounded-[2rem] font-bold hover:bg-blue-500 transition-all">Search</button>
         </div>
     </div>
 
-    <div id="resultsView" class="hidden min-h-screen pt-32 max-w-4xl mx-auto p-6">
-        <div id="statusText" class="text-[10px] font-bold text-slate-500 mb-8 uppercase tracking-[0.3em] border-b border-white/5 pb-4"></div>
-        <div id="loader" class="hidden py-10 text-center">
-            <div class="inline-block w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-        <div id="resultsArea" class="space-y-10 pb-20"></div>
-    </div>
-
-    <div id="modalOverlay" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] hidden flex items-center justify-center p-4">
-        <div class="glass p-10 rounded-[2.5rem] w-full max-w-md shadow-2xl relative text-center">
-            <h2 class="text-3xl font-bold mb-8">Access Portal</h2>
-            <div class="space-y-4">
-                <input type="email" id="authEmail" placeholder="Email" class="w-full bg-slate-950 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
-                <input type="password" id="authPass" placeholder="Password" class="w-full bg-slate-950 border border-white/10 p-4 rounded-2xl outline-none focus:border-blue-500">
-                <div class="grid grid-cols-2 gap-4 mt-4">
-                    <button onclick="handleSignIn()" class="bg-blue-600 py-4 rounded-2xl font-bold hover:bg-blue-500 transition-all">Sign In</button>
-                    <button onclick="handleSignUp()" class="border border-white/10 py-4 rounded-2xl font-bold hover:bg-white/5">Register</button>
-                </div>
-                <button onclick="closeAuth()" class="text-slate-500 text-xs mt-4 hover:text-white transition-colors">Close</button>
+    <div id="resultsView" class="hidden min-h-screen pt-28 max-w-6xl mx-auto p-6">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div class="flex gap-6 border-b border-white/10 w-full md:w-auto">
+                <button onclick="switchTab('web')" id="webTab" class="pb-2 px-2 nav-search-active font-semibold transition-all">All Results</button>
+                <button onclick="switchTab('image')" id="imageTab" class="pb-2 px-2 text-slate-500 hover:text-white transition-all">Images</button>
+            </div>
+            <div class="text-[10px] text-slate-500 font-mono bg-white/5 px-3 py-1 rounded-full">
+                SEARCH_ID: <span id="displaySearchId" class="text-blue-400"></span>
             </div>
         </div>
+
+        <div id="webResults" class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+            <div class="lg:col-span-2 space-y-10" id="webList"></div>
+            <div class="hidden lg:block glass p-6 rounded-3xl h-fit sticky top-32">
+                <h4 class="font-bold mb-4">Knowledge Panel</h4>
+                <p id="wikiSnippet" class="text-sm text-slate-400 leading-relaxed">Intelligence gathered for your query.</p>
+            </div>
+        </div>
+
+        <div id="imageResults" class="hidden grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"></div>
     </div>
 
     <script>
-        // --- 1. CONFIGURATION ---
-        const SUPABASE_URL = 'https://ozjcddwclbyaqczbjskd.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_KXU_zAxJl7xAhQ7zipy5zw_MREh67Iu';
-        const GOOGLE_API_KEY = 'AIzaSyDBtCFcrro8OwvLvQ-3UifBNMtUKxawyCw';
+        const API_KEY = 'AIzaSyDBtCFcrro8OwvLvQ-3UifBNMtUKxawyCw';
         const SEARCH_ID = 'b488fd849d7a04e36';
+        let currentQuery = "";
 
-        const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // --- 2. AUTHENTICATION ---
-        function openAuth() { document.getElementById('modalOverlay').classList.remove('hidden'); }
-        function closeAuth() { document.getElementById('modalOverlay').classList.add('hidden'); }
-
-        async function handleSignIn() {
-            const { error } = await sb.auth.signInWithPassword({
-                email: document.getElementById('authEmail').value,
-                password: document.getElementById('authPass').value
-            });
-            if (error) alert(error.message); else closeAuth();
+        // GENERATE UNIQUE SEARCH ID
+        function generateSearchID() {
+            return 'SID-' + Math.random().toString(36).substr(2, 9).toUpperCase();
         }
 
-        async function handleSignUp() {
-            const { error } = await sb.auth.signUp({
-                email: document.getElementById('authEmail').value,
-                password: document.getElementById('authPass').value
-            });
-            if (error) alert(error.message); else alert("Check your email for confirmation!");
-        }
-
-        async function handleLogout() { await sb.auth.signOut(); }
-
-        // --- 3. STATE MONITOR ---
-        sb.auth.onAuthStateChange((event, session) => {
-            const user = session?.user;
-            document.getElementById('loggedOutContent').classList.toggle('hidden', !!user);
-            document.getElementById('loggedInContent').classList.toggle('hidden', !user);
-            if (user) {
-                document.getElementById('userEmailDisplay').innerText = user.email;
-                document.getElementById('userIcon').classList.add('hidden');
-                document.getElementById('userAvatar').classList.remove('hidden');
-                document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${user.email}&background=2563eb&color=fff&bold=true`;
-            } else {
-                document.getElementById('userIcon').classList.remove('hidden');
-                document.getElementById('userAvatar').classList.add('hidden');
-            }
-        });
-
-        // --- 4. SEARCH ENGINE FUNCTION ---
-        async function executeSearch() {
-            const query = document.getElementById('searchInput').value.trim();
+        async function executeSearch(inputId) {
+            const query = document.getElementById(inputId).value.trim();
             if (!query) return;
+            currentQuery = query;
 
+            // UI Transitions
             document.getElementById('homeView').classList.add('hidden');
             document.getElementById('resultsView').classList.remove('hidden');
-            document.getElementById('loader').classList.remove('hidden');
-            document.getElementById('resultsArea').innerHTML = '';
-            document.getElementById('statusText').innerText = `Executing search for "${query}"...`;
+            document.getElementById('navSearchContainer').classList.remove('hidden');
+            document.getElementById('navInput').value = query;
+            
+            // Set Search ID
+            document.getElementById('displaySearchId').innerText = generateSearchID();
 
+            // Fetch Web Results
+            fetchResults(query, 'web');
+            // Fetch Images
+            fetchResults(query, 'image');
+        }
+
+        async function fetchResults(query, type) {
+            const isImage = type === 'image';
+            const url = `https://www.googleapis.com/customsearch/v1?key=${API_KEY}&cx=${SEARCH_ID}&q=${encodeURIComponent(query)}${isImage ? '&searchType=image' : ''}`;
+            
             try {
-                const response = await fetch(`https://www.googleapis.com/customsearch/v1?key=${GOOGLE_API_KEY}&cx=${SEARCH_ID}&q=${encodeURIComponent(query)}`);
+                const response = await fetch(url);
                 const data = await response.json();
-                document.getElementById('loader').classList.add('hidden');
-
-                if (data.items) {
-                    data.items.forEach(item => {
-                        const div = document.createElement('div');
-                        div.className = "result-item p-6 rounded-2xl cursor-pointer group";
-                        div.onclick = () => window.open(item.link, '_blank');
-                        div.innerHTML = `
-                            <p class="text-[10px] text-blue-500/60 mb-1">${item.displayLink}</p>
-                            <h3 class="text-xl text-blue-400 font-semibold group-hover:text-blue-300 transition-colors">${item.title}</h3>
-                            <p class="text-slate-400 text-sm mt-2 leading-relaxed font-light">${item.snippet}</p>
-                        `;
-                        document.getElementById('resultsArea').appendChild(div);
-                    });
-                    document.getElementById('statusText').innerText = "Query Success: Intelligence Retrieved";
-                } else {
-                    document.getElementById('statusText').innerText = "No intelligence found for this query.";
-                }
-            } catch (err) {
-                document.getElementById('loader').classList.add('hidden');
-                document.getElementById('statusText').innerText = "Server Error: API Limit or Connection Issue.";
-            }
+                
+                if (isImage) renderImages(data.items);
+                else renderWeb(data.items);
+            } catch (err) { console.error(err); }
         }
 
-        // --- 5. UI UTILITIES ---
-        function goHome() {
-            document.getElementById('homeView').classList.remove('hidden');
-            document.getElementById('resultsView').classList.add('hidden');
-            document.getElementById('searchInput').value = '';
+        function renderWeb(items) {
+            const list = document.getElementById('webList');
+            list.innerHTML = '';
+            if(!items) return;
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "group";
+                div.innerHTML = `
+                    <p class="text-xs text-slate-500 mb-1">${item.displayLink}</p>
+                    <a href="${item.link}" target="_blank" class="text-xl text-blue-400 font-semibold group-hover:underline">${item.title}</a>
+                    <p class="text-slate-400 text-sm mt-2">${item.snippet}</p>
+                `;
+                list.appendChild(div);
+            });
+            document.getElementById('wikiSnippet').innerText = items[0].snippet;
         }
 
+        function renderImages(items) {
+            const container = document.getElementById('imageResults');
+            container.innerHTML = '';
+            if(!items) return;
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = "image-card rounded-xl overflow-hidden glass cursor-pointer";
+                div.onclick = () => window.open(item.link, '_blank');
+                div.innerHTML = `
+                    <img src="${item.link}" class="w-full h-48 object-cover">
+                    <div class="p-2 text-[10px] text-slate-500 truncate">${item.title}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function switchTab(tab) {
+            const isWeb = tab === 'web';
+            document.getElementById('webResults').classList.toggle('hidden', !isWeb);
+            document.getElementById('imageResults').classList.toggle('hidden', isWeb);
+            
+            document.getElementById('webTab').className = isWeb ? "pb-2 px-2 nav-search-active font-semibold" : "pb-2 px-2 text-slate-500 hover:text-white";
+            document.getElementById('imageTab').className = !isWeb ? "pb-2 px-2 nav-search-active font-semibold" : "pb-2 px-2 text-slate-500 hover:text-white";
+        }
+
+        function goHome() { location.reload(); }
+
+        // Dropdown Logic
         document.getElementById('appLauncherBtn').onclick = (e) => {
             e.stopPropagation();
             document.getElementById('appDropdown').classList.toggle('hidden');
-            document.getElementById('profileDropdown').classList.add('hidden');
         };
-
-        document.getElementById('profileBtn').onclick = (e) => {
-            e.stopPropagation();
-            document.getElementById('profileDropdown').classList.toggle('hidden');
-            document.getElementById('appDropdown').classList.add('hidden');
-        };
-
-        window.onclick = () => {
-            document.getElementById('appDropdown').classList.add('hidden');
-            document.getElementById('profileDropdown').classList.add('hidden');
-        };
-
-        document.getElementById('searchInput').onkeydown = (e) => { if (e.key === 'Enter') executeSearch(); };
+        window.onclick = () => document.getElementById('appDropdown').classList.add('hidden');
+        
+        // Key listener
+        document.getElementById('mainInput').onkeydown = (e) => { if(e.key === 'Enter') executeSearch('mainInput'); };
+        document.getElementById('navInput').onkeydown = (e) => { if(e.key === 'Enter') executeSearch('navInput'); };
     </script>
 </body>
 </html>
